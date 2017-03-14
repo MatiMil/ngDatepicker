@@ -65,6 +65,20 @@ angular.module('jkuri.datepicker', [])
 
                 generateDayNames();
 
+                scope.keypressed = function (ev) {
+                    if (ev.keyCode == 13) {
+                        var d = moment(scope.viewValue, scope.viewFormat)
+                        ngModel.$setViewValue(d.format(scope.format));
+                        scope.viewValue = d.format(scope.viewFormat);
+                        scope.closeCalendar();
+                    }
+                    else if (ev.keyCode == 27) { //ESC
+                        var d = moment(ngModel.$modelValue);
+                        scope.viewValue = d.format(scope.viewFormat);
+                        scope.closeCalendar();
+                    }
+                }
+
                 scope.showCalendar = function () {
                     scope.calendarOpened = true;
                     generateCalendar(date);
@@ -148,7 +162,7 @@ angular.module('jkuri.datepicker', [])
             },
             template: '<div class="ng-datepicker-input-cont {{ clearDateEnabled }}">' +
             '<i ng-click="clearDate($event)" class="fa fa-times ng-datepicker-input-clear-icon"></i>' +
-            '<input type="text" ng-focus="showCalendar()" ng-value="viewValue" class="ng-datepicker-input" placeholder="{{ placeholder }}">' +
+            '<input type="text" ng-focus="showCalendar()" ng-keydown="keypressed($event)" ng-value="viewValue" class="ng-datepicker-input" placeholder="{{ placeholder }}">' +
             '</div>' +
             '<div class="ng-datepicker" ng-show="calendarOpened">' +
             '  <div class="controls">' +
